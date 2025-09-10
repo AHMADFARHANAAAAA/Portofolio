@@ -3,27 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Slow Rush Portfolio</title>
+  <title>Ahmad Farhan — Portfolio</title>
+  <meta name="description" content="Portfolio of Ahmad Farhan — Backend developer and cloud enthusiast exploring machine learning." />
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-  <style>
-    @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap");
-    @import url("https://fonts.googleapis.com/css2?family=Mr+Dafoe&display=swap");
-    html {
-      scroll-behavior: smooth;
-    }
-    /* Custom scrollbar for dark theme */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #000;
-    }
-    ::-webkit-scrollbar-thumb {
-      background-color: #444;
-      border-radius: 4px;
-    }
-  </style>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body class="bg-black text-white font-montserrat min-h-screen flex flex-col pt-24">
@@ -40,7 +23,10 @@
         <a href="#work" class="hover:text-indigo-400 focus:text-indigo-400 transition focus:outline-none">Work</a>
       </li>
       <li>
-        <a href="#tour" class="hover:text-indigo-400 focus:text-indigo-400 transition focus:outline-none">Skill</a>
+        <a href="#skills" class="hover:text-indigo-400 focus:text-indigo-400 transition focus:outline-none">Skills</a>
+      </li>
+      <li>
+        <a href="#certifications" class="hover:text-indigo-400 focus:text-indigo-400 transition focus:outline-none">Certifications</a>
       </li>
       <li>
         <a href="#contact" class="hover:text-indigo-400 focus:text-indigo-400 transition focus:outline-none">Contact</a>
@@ -54,167 +40,135 @@
   <div id="mobile-menu" class="hidden flex-col bg-black px-8 py-6 space-y-6 uppercase font-extrabold tracking-widest text-base shadow-lg fixed top-20 left-0 w-full z-40">
     <a href="#about" class="block hover:text-indigo-400 focus:text-indigo-400 transition focus:outline-none">About</a>
     <a href="#work" class="block hover:text-indigo-400 focus:text-indigo-400 transition focus:outline-none">Work</a>
-    <a href="#tour" class="block hover:text-indigo-400 focus:text-indigo-400 transition focus:outline-none">Tour</a>
-    <a href="#merch" class="block hover:text-indigo-400 focus:text-indigo-400 transition focus:outline-none">Merch</a>
+    <a href="#skills" class="block hover:text-indigo-400 focus:text-indigo-400 transition focus:outline-none">Skills</a>
+    <a href="#certifications" class="block hover:text-indigo-400 focus:text-indigo-400 transition focus:outline-none">Certifications</a>
     <a href="#contact" class="block hover:text-indigo-400 focus:text-indigo-400 transition focus:outline-none">Contact</a>
   </div>
+  <!-- Mobile Overlay -->
+  <div id="menu-overlay" class="hidden fixed inset-0 bg-black/60 z-30"></div>
   <!-- Hero Section -->
-  <section id="hero" class="flex flex-col md:flex-row items-center justify-center flex-1 px-8 py-24 max-w-7xl mx-auto gap-12">
+  <section id="hero" class="flex flex-col md:flex-row items-center justify-center flex-1 px-6 py-16 sm:px-8 sm:py-24 max-w-7xl mx-auto gap-8 md:gap-12">
     <div class="flex-1 max-w-lg text-center md:text-left">
-      <h1 class="text-[3rem] sm:text-[4.5rem] md:text-[6rem] font-mr-dafoe leading-none select-none text-indigo-400 mb-4" style="line-height: 1">
+      <h1 class="text-[3rem] sm:text-[4.5rem] md:text-[6rem] font-mr-dafoe leading-none select-none text-indigo-400 mb-4">
         Ahmad<br />Farhan
       </h1>
       <p class="mt-4 text-gray-300 font-medium tracking-wide max-w-md text-lg">
         Backend developer and cloud enthusiast exploring machine learning to build smarter systems.
       </p>
-      <div class="mt-10 flex justify-center md:justify-start space-x-6">
-        <a href="#work" class="px-6 py-3 border border-indigo-400 text-indigo-400 rounded-md uppercase font-extrabold tracking-widest hover:bg-indigo-400 hover:text-black transition focus:outline-none focus:ring-2 focus:ring-indigo-400">View Work</a>
-        <a href="#contact" class="px-6 py-3 border border-white rounded-md uppercase font-extrabold tracking-widest hover:bg-white hover:text-black transition focus:outline-none focus:ring-2 focus:ring-white">Contact</a>
+      <div class="mt-10 flex justify-center md:justify-start space-x-4 sm:space-x-6">
+        <a href="#work" class="px-4 py-2.5 sm:px-6 sm:py-3 text-sm sm:text-base border border-indigo-400 text-indigo-400 rounded-md uppercase font-extrabold tracking-widest hover:bg-indigo-400 hover:text-black transition focus:outline-none focus:ring-2 focus:ring-indigo-400">View Work</a>
+        <a href="#contact" class="px-4 py-2.5 sm:px-6 sm:py-3 text-sm sm:text-base border border-white rounded-md uppercase font-extrabold tracking-widest hover:bg-white hover:text-black transition focus:outline-none focus:ring-2 focus:ring-white">Contact</a>
       </div>
     </div>
-    <div class="flex-1 flex justify-center md:justify-end">
+    <div class="flex-1 flex justify-center md:justify-end image-bg relative">
       <img
-        src="https://storage.googleapis.com/a1aa/image/c83bc4a2-6522-4fea-af34-4ab1381a4156.jpg"
+        src="Image/_DSC7328.jpg"
         alt="Ahmad Farhan Portfolio Hero"
-        class="max-h-[400px] object-contain rounded-xl shadow-2xl"
-        width="300"
-        height="400"
+        class="hero-portrait"
+        width="420"
+        height="560"
       />
     </div>
   </section>
   <!-- Work Section -->
-  <section id="work" class="max-w-7xl mx-auto px-8 py-20 border-t border-gray-800">
+  <section id="work" class="max-w-7xl mx-auto px-6 sm:px-8 py-16 sm:py-20 border-t border-gray-800">
     <h2 class="text-3xl font-extrabold uppercase tracking-widest mb-12">Work</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
-      <article class="bg-gray-900 rounded-lg overflow-hidden shadow-lg hover:shadow-white transition-shadow">
-        <img src="https://storage.googleapis.com/a1aa/image/62d42844-4f8a-4dfd-24b5-34de9e2a3e2e.jpg" alt="Project 1 preview image with dark theme and abstract shapes" class="w-full object-cover h-48" width="600" height="400" />
-        <div class="p-6">
-          <h3 class="font-bold text-xl mb-2">Project One</h3>
-          <p class="text-gray-400 text-sm">A creative project inspired by the Slow Rush aesthetic and vibe.</p>
+    <div class="relative">
+      <button id="proj-prev" aria-label="Previous projects" class="hidden md:flex items-center justify-center absolute -left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-gray-800/70 hover:bg-gray-700 text-white shadow z-10">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <div id="projects-track" class="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar px-1">
+        <!-- Cards injected by java.js -->
+      </div>
+      <button id="proj-next" aria-label="Next projects" class="hidden md:flex items-center justify-center absolute -right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-gray-800/70 hover:bg-gray-700 text-white shadow z-10">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+    <div id="projects-dots" class="mt-6 flex justify-center gap-2" aria-label="Project pagination"></div>
+  </section>
+  <!-- Skills Section -->
+  <section id="skills" class="max-w-7xl mx-auto px-6 sm:px-8 py-16 sm:py-20 border-t border-gray-800">
+    <h2 class="text-3xl font-extrabold uppercase tracking-widest mb-12">Skills</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 text-gray-300">
+      <!-- Languages -->
+      <div>
+        <h3 class="text-lg font-bold uppercase tracking-widest mb-4 text-white">Languages</h3>
+        <div class="flex flex-wrap gap-2">
+          <span class="px-3 py-1 rounded-full bg-gray-800 text-sm">Java</span>
+          <span class="px-3 py-1 rounded-full bg-gray-800 text-sm">Python</span>
+          <span class="px-3 py-1 rounded-full bg-gray-800 text-sm">JavaScript</span>
+          <span class="px-3 py-1 rounded-full bg-gray-800 text-sm">PHP</span>
+
         </div>
-      </article>
-      <article class="bg-gray-900 rounded-lg overflow-hidden shadow-lg hover:shadow-white transition-shadow">
-        <img src="https://storage.googleapis.com/a1aa/image/5154153f-67c6-4a09-c460-c3f7b437fc47.jpg" alt="Project 2 preview image with dark theme and abstract shapes" class="w-full object-cover h-48" width="600" height="400" />
-        <div class="p-6">
-          <h3 class="font-bold text-xl mb-2">Project Two</h3>
-          <p class="text-gray-400 text-sm">Another portfolio piece with a moody, artistic vibe.</p>
+      </div>
+      <!-- Backend -->
+      <div>
+        <h3 class="text-lg font-bold uppercase tracking-widest mb-4 text-white">Backend</h3>
+        <div class="flex flex-wrap gap-2">
+          <span class="px-3 py-1 rounded-full bg-gray-800 text-sm">Laravel</span>
+          <span class="px-3 py-1 rounded-full bg-gray-800 text-sm">Express.js</span>
+          <span class="px-3 py-1 rounded-full bg-gray-800 text-sm">REST APIs</span>
+          <span class="px-3 py-1 rounded-full bg-gray-800 text-sm">Authentication & Authorization</span>
         </div>
-      </article>
-      <article class="bg-gray-900 rounded-lg overflow-hidden shadow-lg hover:shadow-white transition-shadow">
-        <img src="https://storage.googleapis.com/a1aa/image/5ed1be43-b346-469a-a707-a58efb4b9a21.jpg" alt="Project 3 preview image with dark theme and abstract shapes" class="w-full object-cover h-48" width="600" height="400" />
-        <div class="p-6">
-          <h3 class="font-bold text-xl mb-2">Project Three</h3>
-          <p class="text-gray-400 text-sm">A unique design project with a minimalist black and white style.</p>
+      </div>
+      
+      <!-- Cloud & DevOps -->
+      <div>
+        <h3 class="text-lg font-bold uppercase tracking-widest mb-4 text-white">Cloud & DevOps</h3>
+        <div class="flex flex-wrap gap-2">
+          <span class="px-3 py-1 rounded-full bg-gray-800 text-sm">Google Cloud</span>
+          <span class="px-3 py-1 rounded-full bg-gray-800 text-sm">Docker</span>
+        
         </div>
-      </article>
+      </div>
+      <!-- Machine Learning -->
+      <div>
+        <h3 class="text-lg font-bold uppercase tracking-widest mb-4 text-white">Machine Learning</h3>
+        <div class="flex flex-wrap gap-2">
+          <span class="px-3 py-1 rounded-full bg-gray-800 text-sm">Python (NumPy, Pandas)</span>
+          <span class="px-3 py-1 rounded-full bg-gray-800 text-sm">Jupyter</span>
+          <span class="px-3 py-1 rounded-full bg-gray-800 text-sm">TensorFlow (basics)</span>
+        </div>
+      </div>
+      <!-- Tools -->
+      <div>
+        <h3 class="text-lg font-bold uppercase tracking-widest mb-4 text-white">Tools</h3>
+        <div class="flex flex-wrap gap-2">
+          <span class="px-3 py-1 rounded-full bg-gray-800 text-sm">Git</span>
+          <span class="px-3 py-1 rounded-full bg-gray-800 text-sm">Postman</span>
+          <span class="px-3 py-1 rounded-full bg-gray-800 text-sm">Firebase</span>
+        </div>
+      </div>
     </div>
   </section>
-  <!-- Tour Section -->
-  <section id="tour" class="max-w-7xl mx-auto px-8 py-20 border-t border-gray-800">
-    <h2 class="text-3xl font-extrabold uppercase tracking-widest mb-12">Skill</h2>
-    <ul class="space-y-6 text-gray-300 font-semibold">
-      <li class="flex justify-between border-b border-gray-700 pb-4">
-        <span>July 15, 2024 - New York, NY</span>
-        <a href="#" class="text-white font-extrabold uppercase tracking-widest hover:text-gray-400 transition">Tickets</a>
-      </li>
-      <li class="flex justify-between border-b border-gray-700 pb-4">
-        <span>August 3, 2024 - Los Angeles, CA</span>
-        <a href="#" class="text-white font-extrabold uppercase tracking-widest hover:text-gray-400 transition">Tickets</a>
-      </li>
-      <li class="flex justify-between border-b border-gray-700 pb-4">
-        <span>September 10, 2024 - Chicago, IL</span>
-        <a href="#" class="text-white font-extrabold uppercase tracking-widest hover:text-gray-400 transition">Tickets</a>
-      </li>
-    </ul>
+  <!-- Certifications Section -->
+  <section id="certifications" class="max-w-7xl mx-auto px-6 sm:px-8 py-16 sm:py-20 border-t border-gray-800">
+    <h2 class="text-3xl font-extrabold uppercase tracking-widest mb-12">Certifications</h2>
+    <div id="cert-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
   </section>
-  <!-- Merch Section -->
- <br>
- <br>
+  
   <!-- Contact Section -->
-  <section id="contact" class="max-w-7xl mx-auto px-8 py-20 border-t border-gray-800 text-center">
+  <section id="contact" class="max-w-7xl mx-auto px-6 sm:px-8 py-16 sm:py-20 border-t border-gray-800 text-center">
     <h2 class="text-3xl font-extrabold uppercase tracking-widest mb-8">Contact</h2>
     <p class="max-w-xl mx-auto text-gray-400 mb-8">
       For inquiries, bookings, or collaborations, reach out via email or social media.
     </p>
-    <div class="flex justify-center space-x-12 text-white text-2xl">
-      <a href="mailto:contact@slowrushdlx.com" aria-label="Email" class="hover:text-gray-400 transition">
+    <div class="flex justify-center space-x-8 sm:space-x-12 text-white text-xl sm:text-2xl">
+      <a href="mailto:ahmadfarhanrpl@gmail.com" aria-label="Email" class="hover:text-gray-400 transition">
         <i class="fas fa-envelope"></i>
       </a>
-      <a href="https://twitter.com/slowrushdlx" target="_blank" rel="noopener noreferrer" aria-label="Twitter" class="hover:text-gray-400 transition">
-        <i class="fab fa-twitter"></i>
+      <a href="https://www.linkedin.com/in/ahmad-farhanrpl/ " target="_blank" rel="noopener noreferrer" aria-label="Twitter" class="hover:text-gray-400 transition">
+        <i class="fab fa-linkedin"></i>
       </a>
-      <a href="https://instagram.com/slowrushdlx" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="hover:text-gray-400 transition">
+      <a href="https://www.instagram.com/ahmad_f4rhan/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="hover:text-gray-400 transition">
         <i class="fab fa-instagram"></i>
       </a>
     </div>
   </section>
   <!-- Footer -->
-  <footer class="border-t border-gray-800 py-6 px-8 text-xs text-gray-600 text-center select-none">
+  <!-- <footer class="border-t border-gray-800 py-6 px-8 text-xs text-gray-600 text-center select-none">
     © 2024 SlowRushDLX. All rights reserved.
-  </footer>
-  <script>
-    // Mobile menu toggle
-    const menuBtn = document.getElementById("menu-btn");
-    const mobileMenu = document.getElementById("mobile-menu");
-
-    menuBtn.addEventListener("click", () => {
-      mobileMenu.classList.toggle("hidden");
-      menuBtn.setAttribute("aria-expanded", !mobileMenu.classList.contains("hidden"));
-    });
-
-    // Smooth scroll for all anchor links (for browsers that don't support scroll-behavior)
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        const targetId = this.getAttribute('href').slice(1);
-        const target = document.getElementById(targetId);
-
-        // If About clicked, scroll to top (main content)
-        if (targetId === "about") {
-          e.preventDefault();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-          if (!mobileMenu.classList.contains("hidden")) {
-            mobileMenu.classList.add("hidden");
-            menuBtn.setAttribute("aria-expanded", "false");
-          }
-          return;
-        }
-
-        if (target) {
-          e.preventDefault();
-          target.scrollIntoView({ behavior: 'smooth' });
-          if (!mobileMenu.classList.contains("hidden")) {
-            mobileMenu.classList.add("hidden");
-            menuBtn.setAttribute("aria-expanded", "false");
-          }
-        }
-      });
-    });
-
-    // Section highlight animation on scroll
-    const sections = ["hero", "work", "tour", "merch", "contact"];
-    const navLinks = document.querySelectorAll('nav a[href^="#"], #mobile-menu a[href^="#"]');
-
-    function activateNavLink() {
-      let index = sections.length;
-      while (--index >= 0) {
-        const section = document.getElementById(sections[index]);
-        if (section) {
-          const rect = section.getBoundingClientRect();
-          if (rect.top <= 120 && rect.bottom > 120) {
-            navLinks.forEach(link => {
-              link.classList.remove("nav-active");
-              if (link.getAttribute("href") === "#" + sections[index]) {
-                link.classList.add("nav-active");
-              }
-            });
-            break;
-          }
-        }
-      }
-    }
-
-    window.addEventListener("scroll", activateNavLink);
-    window.addEventListener("load", activateNavLink);
-  </script>
+  </footer> -->
+  <script src="java.js" defer></script>
 </body>
 </html>

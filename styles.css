@@ -4,6 +4,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Mr+Dafoe&display=swap");
 
+/* Base */
+html {
+  scroll-behavior: smooth;
+}
+
 /* Font helpers */
 .font-montserrat {
   font-family: "Montserrat", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
@@ -27,6 +32,115 @@
 /* Image reset */
 img {
   display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Clamp long text on mobile for cleaner cards */
+.proj-desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+@media (min-width: 640px) {
+  .proj-desc {
+    -webkit-line-clamp: unset;
+    display: block;
+  }
+}
+
+/* Subtle floating motion for hero portrait */
+@keyframes floaty {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0); }
+}
+.floaty {
+  animation: floaty 6s ease-in-out infinite;
+}
+
+/* Hero portrait enhancements */
+.hero-portrait {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: auto;
+  max-width: clamp(220px, 40vw, 420px);
+  max-height: 480px;
+  object-fit: contain; /* show full image without cropping */
+  border-radius: 1.5rem; /* smoother, larger corner radius */
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08), /* subtle edge definition */
+    0 20px 60px rgba(99, 102, 241, 0.25), /* indigo glow */
+    0 8px 30px rgba(0, 0, 0, 0.6);
+  filter: saturate(1.12) contrast(1.06);
+  transition: transform 0.5s ease, filter 0.5s ease, box-shadow 0.5s ease;
+  will-change: transform, filter, box-shadow;
+  animation: floaty 6s ease-in-out infinite;
+}
+
+.hero-portrait:hover {
+  transform: scale(1.02) rotate(-0.5deg);
+  filter: saturate(1.22) contrast(1.08);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 26px 80px rgba(167, 139, 250, 0.28), /* purple glow stronger */
+    0 10px 34px rgba(0, 0, 0, 0.65);
+}
+
+/* soft gradient glow behind the portrait */
+.image-bg::before {
+  content: "";
+  position: absolute;
+  inset: -18px;
+  background: radial-gradient(120% 120% at 70% 0%, rgba(99, 102, 241, 0.22) 0%, rgba(167, 139, 250, 0.18) 40%, rgba(236, 72, 153, 0.16) 70%, transparent 80%);
+  filter: blur(22px);
+  border-radius: 24px;
+  pointer-events: none;
+}
+
+/* Responsive tweaks */
+@media (max-width: 640px) {
+  .hero-portrait {
+    max-width: min(86vw, 360px);
+    max-height: 360px;
+    border-radius: 1.25rem;
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.06),
+      0 14px 40px rgba(99, 102, 241, 0.22),
+      0 6px 20px rgba(0, 0, 0, 0.5);
+  }
+  .image-bg::before {
+    inset: -12px;
+    filter: blur(16px);
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-portrait {
+    max-width: clamp(260px, 34vw, 440px);
+    max-height: 520px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-portrait {
+    max-width: 440px;
+    max-height: 560px;
+  }
+  .image-bg::before {
+    inset: -26px;
+    filter: blur(30px);
+  }
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .floaty,
+  .hero-portrait {
+    animation: none !important;
+  }
 }
 
 /* Highlight active navigation link */
@@ -34,4 +148,13 @@ img {
   color: #818cf8 !important; /* Tailwind indigo-400 */
   transition: color 0.3s, border-bottom 0.3s;
   text-decoration: none;
+}
+
+/* Utility: hide scrollbar for horizontal sliders */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
 }
