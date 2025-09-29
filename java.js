@@ -6,7 +6,7 @@ class SiteNav {
     this.menuBtn = document.getElementById(opts.menuBtnId || "menu-btn");
     this.mobileMenu = document.getElementById(opts.mobileMenuId || "mobile-menu");
     this.overlay = document.getElementById(opts.overlayId || "menu-overlay");
-    this.sections = opts.sections || ["hero", "work", "skills", "contact"];
+    this.sections = opts.sections || ["hero", "work", "skills", "certifications", "contact"];
     this.navSelector = opts.navSelector || 'nav a[href^="#"], #mobile-menu a[href^="#"]';
     this.navLinks = document.querySelectorAll(this.navSelector);
     this._scrollRaf = null;
@@ -20,17 +20,101 @@ class SiteNav {
 
   bindMenuToggle() {
     if (!this.menuBtn || !this.mobileMenu) return;
+
+    const hamburger = this.menuBtn.querySelector('.hamburger');
+
     this.menuBtn.addEventListener("click", () => {
-      this.mobileMenu.classList.toggle("hidden");
-      this.overlay?.classList.toggle("hidden");
-      this.menuBtn.setAttribute("aria-expanded", String(!this.mobileMenu.classList.contains("hidden")));
+      const isMenuOpen = this.mobileMenu.classList.contains("show");
+
+      if (isMenuOpen) {
+        // Close menu with enhanced animations
+        this.mobileMenu.classList.remove("show");
+        this.overlay?.classList.remove("show");
+        hamburger?.classList.remove("open");
+
+        // Wait for animation to complete before hiding
+        setTimeout(() => {
+          this.mobileMenu.classList.add("hidden");
+          this.overlay?.classList.add("hidden");
+        }, 400); // Increased timeout to match CSS animation duration
+
+        this.menuBtn.setAttribute("aria-expanded", "false");
+      } else {
+        // Open menu with enhanced animations
+        this.mobileMenu.classList.remove("hidden");
+        this.overlay?.classList.remove("hidden");
+
+        // Trigger animation on next frame for smooth transition
+        requestAnimationFrame(() => {
+          this.mobileMenu.classList.add("show");
+          this.overlay?.classList.add("show");
+          hamburger?.classList.add("open");
+        });
+
+        this.menuBtn.setAttribute("aria-expanded", "true");
+      }
     });
 
-    // Close when tapping outside
+    // Close when tapping outside with enhanced feedback
     this.overlay?.addEventListener("click", () => {
-      if (!this.mobileMenu.classList.contains("hidden")) {
-        this.mobileMenu.classList.add("hidden");
-        this.overlay.classList.add("hidden");
+      if (this.mobileMenu.classList.contains("show")) {
+        this.mobileMenu.classList.remove("show");
+        this.overlay.classList.remove("show");
+        hamburger?.classList.remove("open");
+
+        setTimeout(() => {
+          this.mobileMenu.classList.add("hidden");
+          this.overlay.classList.add("hidden");
+        }, 400);
+
+        this.menuBtn?.setAttribute("aria-expanded", "false");
+      }
+    });
+
+    // Enhanced mobile menu link interactions
+    this.mobileMenu?.querySelectorAll('a').forEach((link, index) => {
+      // Add staggered entrance animations
+      link.style.transitionDelay = `${0.1 + (index * 0.05)}s`;
+
+      link.addEventListener('click', () => {
+        // Add haptic feedback for mobile
+        if (navigator.vibrate) {
+          navigator.vibrate(50);
+        }
+
+        this.mobileMenu.classList.remove("show");
+        this.overlay?.classList.remove("show");
+        hamburger?.classList.remove("open");
+
+        setTimeout(() => {
+          this.mobileMenu.classList.add("hidden");
+          this.overlay?.classList.add("hidden");
+        }, 400);
+
+        this.menuBtn?.setAttribute("aria-expanded", "false");
+      });
+    });
+
+    // Add keyboard navigation support
+    this.menuBtn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        this.menuBtn.click();
+      }
+    });
+
+    // Close menu on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.mobileMenu.classList.contains("show")) {
+        this.mobileMenu.classList.remove("show");
+        this.overlay?.classList.remove("show");
+        hamburger?.classList.remove("open");
+
+        setTimeout(() => {
+          this.mobileMenu.classList.add("hidden");
+          this.overlay?.classList.add("hidden");
+        }, 400);
+
         this.menuBtn?.setAttribute("aria-expanded", "false");
       }
     });
@@ -42,27 +126,39 @@ class SiteNav {
         const href = anchor.getAttribute('href');
         const targetId = href ? href.slice(1) : "";
         if (!targetId) return;
-        const target = document.getElementById(targetId);
+
+        e.preventDefault();
+
+        // Immediately activate the clicked link for instant visual feedback
+        this.navLinks.forEach(link => {
+          link.classList.remove("nav-active");
+          link.removeAttribute("aria-current");
+        });
+        anchor.classList.add("nav-active");
+        anchor.setAttribute("aria-current", "page");
 
         if (targetId === "about") {
-          e.preventDefault();
           window.scrollTo({ top: 0, behavior: 'smooth' });
-          if (this.mobileMenu && !this.mobileMenu.classList.contains("hidden")) {
-            this.mobileMenu.classList.add("hidden");
-            this.overlay?.classList.add("hidden");
-            this.menuBtn?.setAttribute("aria-expanded", "false");
+        } else {
+          const target = document.getElementById(targetId);
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
           }
-          return;
         }
 
-        if (target) {
-          e.preventDefault();
-          target.scrollIntoView({ behavior: 'smooth' });
-          if (this.mobileMenu && !this.mobileMenu.classList.contains("hidden")) {
+        // Close mobile menu if open
+        if (this.mobileMenu && !this.mobileMenu.classList.contains("hidden")) {
+          const hamburger = this.menuBtn?.querySelector('.hamburger');
+          this.mobileMenu.classList.remove("show");
+          this.overlay?.classList.remove("show");
+          hamburger?.classList.remove("open");
+
+          setTimeout(() => {
             this.mobileMenu.classList.add("hidden");
             this.overlay?.classList.add("hidden");
-            this.menuBtn?.setAttribute("aria-expanded", "false");
-          }
+          }, 300);
+
+          this.menuBtn?.setAttribute("aria-expanded", "false");
         }
       });
     });
@@ -81,6 +177,23 @@ class SiteNav {
   }
 
   activateNavLink() {
+    // Special handling for "About" - activate when at the top of the page or in hero section
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+    if (scrollTop < 200) {
+      // At the top of the page - activate About link
+      this.navLinks.forEach(link => {
+        link.classList.remove("nav-active");
+        link.removeAttribute("aria-current");
+        if (link.getAttribute("href") === "#about") {
+          link.classList.add("nav-active");
+          link.setAttribute("aria-current", "page");
+        }
+      });
+      return;
+    }
+
+    // Regular section detection for other sections
     let index = this.sections.length;
     while (--index >= 0) {
       const section = document.getElementById(this.sections[index]);
@@ -109,7 +222,7 @@ class ProjectsSlider {
     this.prevBtn = document.getElementById(opts.prevBtnId || "proj-prev");
     this.nextBtn = document.getElementById(opts.nextBtnId || "proj-next");
     this.dotsWrap = document.getElementById(opts.dotsId || "projects-dots");
-    this.autoplayMs = typeof opts.autoplayMs === 'number' ? opts.autoplayMs : 5000; // default 5s
+    this.autoplayMs = typeof opts.autoplayMs === 'number' ? opts.autoplayMs : 1000; // default 5s
     this.cards = [];
     this.dots = [];
     this.current = 0;
@@ -128,30 +241,70 @@ class ProjectsSlider {
     this.track.innerHTML = "";
     this.projects.forEach(p => {
       const article = document.createElement("article");
-      article.className = "bg-gray-900 rounded-lg overflow-hidden shadow-lg hover:shadow-white transition-shadow";
+      article.className = "bg-gray-900 rounded-lg overflow-hidden shadow-lg hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-300 transform hover:scale-[1.02]";
+
+      // Compact card design with smaller image area
+      const imageHTML = p.image ? `
+        <div class="relative w-full h-32 sm:h-36 md:h-40 bg-gradient-to-br from-gray-800 to-gray-900 overflow-hidden">
+          <img 
+            src="${p.image}" 
+            alt="${p.title}" 
+            class="w-full h-full object-cover object-center transition-transform duration-300 hover:scale-105" 
+            width="400" 
+            height="200" 
+            loading="lazy" 
+            decoding="async"
+            style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+          />
+          <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 flex items-center justify-center text-white font-bold" style="display:none;">
+            <div class="text-center">
+              <div class="text-2xl mb-1">${this.getProjectIcon(p.title)}</div>
+              <span class="text-sm font-semibold">${p.title.split(' ')[0]}</span>
+            </div>
+          </div>
+          <!-- Subtle overlay -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
+        </div>
+      ` : `
+        <div class="w-full h-32 sm:h-36 md:h-40 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 flex items-center justify-center text-white">
+          <div class="text-center">
+            <div class="text-3xl mb-2">${this.getProjectIcon(p.title)}</div>
+            <span class="text-sm font-semibold">${p.title.split(' ')[0]}</span>
+          </div>
+        </div>
+      `;
+
       article.innerHTML = `
-        <img src="${p.image}" alt="${p.title}" class="w-full object-cover h-40 sm:h-48 md:h-56" width="600" height="400" loading="lazy" decoding="async" />
-        <div class="p-4 sm:p-6">
-          <h3 class="font-bold text-lg sm:text-xl mb-2 leading-snug">${p.title}</h3>
-          <p class="text-gray-400 text-sm mb-3 proj-desc">${p.description}</p>
+        ${imageHTML}
+        <div class="p-4">
+          <h3 class="font-bold text-base sm:text-lg mb-2 leading-tight text-white hover:text-indigo-400 transition-colors duration-200 line-clamp-2">${p.title}</h3>
+          <p class="text-gray-400 text-xs sm:text-sm mb-3 leading-relaxed">${p.description}</p>
           ${Array.isArray(p.tech) && p.tech.length ? `
-            <div class=\"flex flex-wrap gap-2\">
-              ${p.tech.map(t => `<span class=\"px-2 py-0.5 rounded-full bg-gray-800 text-xs\">${t}</span>`).join("")}
+            <div class="flex flex-wrap gap-1 mb-3">
+              ${p.tech.slice(0, 3).map(t => `<span class="px-2 py-0.5 rounded-full bg-gray-800 hover:bg-indigo-600 text-xs text-gray-300 hover:text-white transition-all duration-200">${t}</span>`).join("")}
+              ${p.tech.length > 3 ? `<span class="px-2 py-0.5 rounded-full bg-gray-700 text-xs text-gray-400">+${p.tech.length - 3}</span>` : ""}
             </div>` : ""}
           ${(p.github && p.github !== "#") || (p.demo && p.demo !== "#") ? `
-            <div class=\"mt-4 flex gap-4 text-sm\">
-              ${p.github && p.github !== "#" ? `<a class=\"text-indigo-400 hover:text-indigo-300\" href=\"${p.github}\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>` : ""}
-              ${p.demo && p.demo !== "#" ? `<a class=\"text-indigo-400 hover:text-indigo-300\" href=\"${p.demo}\" target=\"_blank\" rel=\"noopener noreferrer\">Live</a>` : ""}
+            <div class="flex gap-3 text-xs">
+              ${p.github && p.github !== "#" ? `<a class="inline-flex items-center gap-1 text-indigo-400 hover:text-indigo-300 font-medium transition-all duration-200" href="${p.github}" target="_blank" rel="noopener noreferrer">
+                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clip-rule="evenodd"></path></svg>
+                Code
+              </a>` : ""}
+              ${p.demo && p.demo !== "#" ? `<a class="inline-flex items-center gap-1 text-emerald-400 hover:text-emerald-300 font-medium transition-all duration-200" href="${p.demo}" target="_blank" rel="noopener noreferrer">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                Live
+              </a>` : ""}
             </div>` : ""}
         </div>
       `;
       this.track.appendChild(article);
     });
 
-    // collect cards & apply sizing/snap
+    // Compact card sizing - larger cards for better content visibility
     this.cards = Array.from(this.track.querySelectorAll("article"));
     this.cards.forEach(card => {
-      card.classList.add("snap-start", "min-w-[85%]", "sm:min-w-[60%]", "md:min-w-[48%]", "lg:min-w-[32%]");
+      card.classList.add("snap-start", "min-w-[340px]", "max-w-[400px]", "w-[340px]", "sm:w-[380px]", "md:w-[400px]");
     });
 
     this.setupDots();
@@ -159,19 +312,28 @@ class ProjectsSlider {
     return this;
   }
 
+  // Helper method to get project icons
+  getProjectIcon(title) {
+    const icons = {
+      'Holti-Health': '🌿',
+      'Flan-BaseVsGpt-Mini40': '🤖',
+      'Maps': '🗺️',
+      'Eduversal': '📚'
+    };
+
+    for (let key in icons) {
+      if (title.toLowerCase().includes(key.toLowerCase())) {
+        return icons[key];
+      }
+    }
+    return '💼'; // default icon
+  }
+
   setupDots() {
     if (!this.dotsWrap) return;
     this.dotsWrap.innerHTML = "";
-    this.dots = this.cards.map((_, i) => {
-      const b = document.createElement("button");
-      b.type = "button";
-      b.className = "w-2.5 h-2.5 rounded-full bg-gray-600 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-400";
-      b.setAttribute("aria-label", `Go to slide ${i + 1}`);
-      b.addEventListener("click", () => this.goto(i, true));
-      this.dotsWrap.appendChild(b);
-      return b;
-    });
-    this.updateDots();
+    this.dots = [];
+    // Dots are now hidden/removed
   }
 
   updateDots() {
@@ -244,15 +406,21 @@ class ProjectsSlider {
   }
 
   startAuto() {
-    if (this.autoTimer || !this.autoplayMs) return;
-    this.autoTimer = setInterval(() => this.goto(this.current + 1), this.autoplayMs);
+    if (!this.autoTimer && this.autoplayMs) {
+      this.autoTimer = setInterval(() => this.goto(this.current + 1), this.autoplayMs);
+    }
   }
+
   stopAuto() {
     if (!this.autoTimer) return;
     clearInterval(this.autoTimer);
     this.autoTimer = null;
   }
-  restartAuto() { this.stopAuto(); this.startAuto(); }
+
+  restartAuto() {
+    this.stopAuto();
+    this.startAuto();
+  }
 
   bindAutoPause() {
     if (!this.track) return;
@@ -300,10 +468,10 @@ class CertificationsList {
       const url = c.url || c.credentialUrl || c.link || "";
       card.innerHTML = `
         <h3 class="font-bold text-lg mb-1">${title}</h3>
-        ${issuer ? `<p class=\"text-gray-400 text-sm mb-1\">${issuer}</p>` : ""}
-        ${date ? `<p class=\"text-gray-500 text-xs mb-3\">Issued ${date}</p>` : ""}
-        ${credId ? `<p class=\"text-gray-500 text-xs mb-3\">Credential ID: ${credId}</p>` : ""}
-        ${url ? `<a class=\"inline-block text-indigo-400 hover:text-indigo-300 text-sm\" href=\"${url}\" target=\"_blank\" rel=\"noopener noreferrer\">View credential</a>` : ""}
+        ${issuer ? `<p class="text-gray-400 text-sm mb-1">${issuer}</p>` : ""}
+        ${date ? `<p class="text-gray-500 text-xs mb-3">Issued ${date}</p>` : ""}
+        ${credId ? `<p class="text-gray-500 text-xs mb-3">Credential ID: ${credId}</p>` : ""}
+        ${url ? `<a class="inline-block text-indigo-400 hover:text-indigo-300 text-sm" href="${url}" target="_blank" rel="noopener noreferrer">View credential</a>` : ""}
       `;
       this.container.appendChild(card);
     });
@@ -311,56 +479,79 @@ class CertificationsList {
   }
 }
 
-// ---- Example data (replace with your real projects) ----
+// ---- Project data ----
 const projects = [
   {
-    title: "Holti-Health ",
-    description: "Holti-Health is an Android app from my Bangkit capstone that checks chili plant health using machine learning. Users upload a photo, and the app shows possible diseases. I worked as Cloud and Backend Engineer, integrating the ML model with FastAPI and cloud services.",
-    tech: ["Node.js", "Express", "API","GCP"],
+    title: "Holti-Health",
+    description: "Android app to detect chili plant diseases using machine learning. I built the backend and cloud integration.",
+    tech: ["Node.js", "Express", "API", "GCP"],
     image: "Image/Screenshot 2025-09-10 132604.png",
     github: "https://github.com/AkmalRendiansyah/Holti-Health",
     demo: "#"
   },
   {
     title: "Flan-BaseVsGpt-Mini40",
-    description: "This project uses two LLMs, Flan-Base and GPT-Mini40, to process ePub files and compare their outputs, such as summaries, translations, and explanations.",
+    description: "Compares two AI models (Flan-Base & GPT-Mini40) for ePub file processing and output analysis.",
     tech: ["Python", "LLM", "Generative AI"],
-    image: "Image/Screenshot 2025-09-09 145653.png",
+    image: "Image/llm.png",
     github: "https://github.com/AHMADFARHANAAAAA/Flan-BaseVsGpt-Mini40",
     demo: "https://flan-basevsgpt-mini40-ephxgaajxnpeyr633kcmmy.streamlit.app/"
   },
   {
     title: "Maps Navigate",
-    description: "A web-based application designed to help students and visitors navigate the UIN Jakarta campus easily. The app provides interactive walking route guidance using JavaScript and the OpenStreetMap API",
+    description: "Campus navigation app for UIN Jakarta with interactive walking routes.",
     tech: ["JavaScript", "Firebase", "Maps"],
-    image: "Image/Screenshot 2025-09-09 143837.png",
+    image: "Image/nav.png",
     github: "https://github.com/AHMADFARHANAAAAA/Maps-",
     demo: "https://maps-2y8w.vercel.app/v2.html"
   },
-  
+  {
+    title: "Eduversal",
+    description: "Company website for education sector, built with HTML, CSS, JS, and WordPress.",
+    tech: ["Html", "Css", "JavaScript", "Wordpress"],
+    image: "Image/edu.png",
+    demo: "https://eduversal.org/"
+  }
 ];
 
-// ---- Certifications data (populate from LinkedIn) ----
+// ---- Certifications data ----
 const certifications = [
-  // Example shape:
-  { name: "Certification Name", 
-    issuer: "Issuer", 
-    date: "MMM YYYY", 
-    credentialId: "ABC-123", 
-    url: "https://..." 
+  {
+    name: "Google Cloud Associate Cloud Engineer",
+    issuer: "Google Cloud",
+    date: "Dec 2023",
+    credentialId: "GCC-ACE-2023",
+    url: "#"
   },
-  { name: "Certification Name", 
-    issuer: "Issuer", 
-    date: "MMM YYYY", 
-    credentialId: "ABC-123", 
-    url: "https://..." 
+  {
+    name: "Machine Learning Specialization",
+    issuer: "Coursera",
+    date: "Nov 2023",
+    credentialId: "ML-SPEC-2023",
+    url: "#"
   },
+  {
+    name: "JavaScript Algorithms and Data Structures",
+    issuer: "FreeCodeCamp",
+    date: "Oct 2023",
+    credentialId: "JS-ALGO-2023",
+    url: "#"
+  }
 ];
 
 // ---- Bootstrap controllers ----
 window.addEventListener("DOMContentLoaded", () => {
-  new SiteNav({ sections: ["hero", "work", "skills", "certifications", "contact"] }).init();
-  new ProjectsSlider({ autoplayMs: 5000 }).setProjects(projects).init();
-  new CertificationsList({}).setItems(certifications).render();
-});
+  console.log("Initializing site navigation...");
+  const siteNav = new SiteNav({ sections: ["hero", "work", "skills", "certifications", "contact"] });
+  siteNav.init();
 
+  console.log("Initializing projects slider...");
+  const projectsSlider = new ProjectsSlider({ autoplayMs: 2000 });
+  projectsSlider.setProjects(projects).init();
+
+  console.log("Initializing certifications...");
+  const certsList = new CertificationsList({});
+  certsList.setItems(certifications).render();
+
+  console.log("Site initialization complete!");
+});
